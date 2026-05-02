@@ -1,0 +1,14 @@
+from flask_wtf import FlaskForm
+from wtforms import StringField, EmailField, SelectField, TextAreaField
+from wtforms.validators import DataRequired, Email, Length, ValidationError
+
+class ConferenceRegistrationForm(FlaskForm):
+    name = StringField("Ваше ім'я", validators=[DataRequired(), Length(max=100)])
+    email = EmailField("Електронна пошта", validators=[DataRequired(), Email()])
+    topic = SelectField("Секція", choices=[('dev', 'Розробка'), ('qa', '...')])
+    message = TextAreaField("Тези доповіді", validators=[DataRequired()])
+
+    # Кастомна валідація
+    def validate_message(self, field):
+        if len(field.data.split()) < 5:
+            raise ValidationError("Тези мають містити принаймні 5 слів!")
